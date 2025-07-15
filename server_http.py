@@ -21,6 +21,7 @@ class BloombergAPI:
         self.session = None
         self.refdata_service = None
         self.apiflds_service = None
+        self.instruments_service = None
     
     def connect(self):
         """Bloomberg APIに接続"""
@@ -42,8 +43,12 @@ class BloombergAPI:
             if not self.session.openService("//blp/apiflds"):
                 raise Exception("Failed to open apiflds service") 
                 
+            if not self.session.openService("//blp/instruments"):
+                raise Exception("Failed to open instruments service")
+                
             self.refdata_service = self.session.getService("//blp/refdata")
             self.apiflds_service = self.session.getService("//blp/apiflds")
+            self.instruments_service = self.session.getService("//blp/instruments")
             
             return True
             
@@ -82,8 +87,8 @@ def search_securities(query: str, max_results: int = 20) -> List[Dict[str, Any]]
     try:
         ensure_connection()
         
-        # InstrumentListRequestを作成
-        request = bbg_api.refdata_service.createRequest("instrumentListRequest")
+        # InstrumentListRequestを作成（正しいサービスを使用）
+        request = bbg_api.instruments_service.createRequest("instrumentListRequest")
         request.set("query", query)
         request.set("maxResults", max_results)
         
@@ -446,7 +451,12 @@ def main():
             print(f"警告: Bloomberg API接続失敗 - {e}")
             print("Bloomberg Terminalが起動していることを確認してください")
         
-        mcp.run_server(host=args.host, port=args.port)
+        # 注意: run_server()メソッドは存在しないため、正しいFastMCP 2.0 APIに修正が必要
+        # mcp.run_server(host=args.host, port=args.port)
+        # 正しくは以下のいずれか：
+        mcp.run(transport="sse", host=args.host, port=args.port)
+        # または
+        # mcp.run(transport="http", host=args.host, port=args.port, path="/mcp")
 
 
 if __name__ == "__main__":
