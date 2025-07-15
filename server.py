@@ -160,12 +160,25 @@ def search_fields(field_query: str, max_results: int = 50) -> List[Dict[str, Any
                     
                     for i in range(field_data.numValues()):
                         field = field_data.getValue(i)
+                        
+                        # 基本情報（fieldレベルのid）
                         field_info = {
-                            "field_id": field.getElementAsString("id"),
-                            "mnemonic": field.getElementAsString("mnemonic") if field.hasElement("mnemonic") else "",
-                            "description": field.getElementAsString("description") if field.hasElement("description") else "",
-                            "data_type": field.getElementAsString("datatype") if field.hasElement("datatype") else ""
+                            "field_id": field.getElementAsString("id") if field.hasElement("id") else ""
                         }
+                        
+                        # fieldInfo要素から詳細情報を取得
+                        if field.hasElement("fieldInfo"):
+                            field_info_element = field.getElement("fieldInfo")
+                            
+                            field_info.update({
+                                "mnemonic": field_info_element.getElementAsString("mnemonic") if field_info_element.hasElement("mnemonic") else "",
+                                "description": field_info_element.getElementAsString("description") if field_info_element.hasElement("description") else "",
+                                "data_type": field_info_element.getElementAsString("datatype") if field_info_element.hasElement("datatype") else "",
+                                "documentation": field_info_element.getElementAsString("documentation") if field_info_element.hasElement("documentation") else "",
+                                "category_name": field_info_element.getElementAsString("categoryName") if field_info_element.hasElement("categoryName") else "",
+                                "property": field_info_element.getElementAsString("property") if field_info_element.hasElement("property") else ""
+                            })
+                        
                         results.append(field_info)
                         
                         if len(results) >= max_results:
