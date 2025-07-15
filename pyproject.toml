@@ -1,10 +1,12 @@
 [project]
 name = "simple-mcp-server"
-version = "0.1.0"
-description = "シンプルなFastMCPサーバー - 個人用ローカルツール"
+version = "1.0.0"
+description = "Bloomberg MCP Server - FastMCPを使った市場データ取得サーバー"
 requires-python = ">=3.8"
 dependencies = [
     "fastmcp>=2.0.0",
+    "blpapi",
+    "pandas",
 ]
 
 [build-system]
@@ -13,3 +15,7 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = []
+
+[[tool.uv.index]]
+name = "bloomberg"
+url = "https://blpapi.bloomberg.com/repository/releases/python/simple/"
