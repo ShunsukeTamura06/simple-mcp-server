@@ -155,7 +155,7 @@ def search_fields(field_query: str, max_results: int = 50) -> List[Dict[str, Any
             event = bbg_api.session.nextEvent(500)
             
             for msg in event:
-                if msg.messageType() == blpapi.Name("FieldResponse"):
+                if msg.messageType() == blpapi.Name("fieldResponse"):
                     field_data = msg.getElement("fieldData")
                     
                     for i in range(field_data.numValues()):
