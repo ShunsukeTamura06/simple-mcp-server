@@ -1,1 +1,4 @@
 fastmcp>=2.0.0
+--index-url=https://blpapi.bloomberg.com/repository/releases/python/simple/
+blpapi
+pandas
